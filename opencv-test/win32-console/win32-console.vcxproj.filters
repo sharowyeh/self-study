@@ -21,9 +21,15 @@
     <ClCompile Include="imread_debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vignetting_correction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imread_debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vignetting_correction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

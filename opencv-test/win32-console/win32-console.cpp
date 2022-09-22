@@ -11,12 +11,15 @@
 using namespace cv;
 
 #include "imread_debug.h"
+#include "vignetting_correction.h"
 
 int main()
 {
     std::cout << "Hello World!\n";
 
-	read_goddess_lenna();
+	//read_goddess_lenna();
+
+	normalization_debug();
 
 	return 0;
 }

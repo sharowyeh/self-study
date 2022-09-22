@@ -133,10 +133,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="imread_debug.cpp" />
+    <ClCompile Include="vignetting_correction.cpp" />
     <ClCompile Include="win32-console.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imread_debug.h" />
+    <ClInclude Include="vignetting_correction.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
