@@ -24,12 +24,24 @@
     <ClCompile Include="vignetting_correction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="match_template.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win32_interact.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imread_debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vignetting_correction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="match_template.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="win32_interact.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

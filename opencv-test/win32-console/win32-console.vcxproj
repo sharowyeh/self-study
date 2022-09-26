@@ -133,12 +133,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="imread_debug.cpp" />
+    <ClCompile Include="match_template.cpp" />
     <ClCompile Include="vignetting_correction.cpp" />
+    <ClCompile Include="win32_interact.cpp" />
     <ClCompile Include="win32-console.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imread_debug.h" />
+    <ClInclude Include="match_template.h" />
     <ClInclude Include="vignetting_correction.h" />
+    <ClInclude Include="win32_interact.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

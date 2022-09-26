@@ -8,10 +8,13 @@
 #include <opencv2/highgui.hpp>
 
 #pragma comment(lib, "opencv_world450d.lib")
-using namespace cv;
+// prevent using namespace cv here or header files, which will get
+//   ACCESS_MASK is ambiguous between windows.h and cv::AccessFlag 
 
 #include "imread_debug.h"
 #include "vignetting_correction.h"
+#include "win32_interact.h"
+#include "match_template.h"
 
 int main()
 {
@@ -19,7 +22,11 @@ int main()
 
 	//read_goddess_lenna();
 
-	normalization_debug();
+	//normalization_debug();
+
+	//streamWindowsDesktop();
+
+	findCuteIsabellaInGameScreen();
 
 	return 0;
 }
