@@ -61,6 +61,35 @@ bool hwnd2mat(HWND hwnd, cv::Mat& src)
 	return true;
 }
 
+bool isMouseDrag = false;
+cv::Rect drawRect = cv::Rect(0, 0, 0, 0);
+cv::Point originPt = cv::Point(0, 0);
+char drawText[256] = { 0 };
+
+void onMouseEventHandler(int evt, int x, int y, int flags, void* userdata)
+{
+	int dx, dy, dw, dh = 0;
+	switch (evt) {
+	case cv::EVENT_LBUTTONDOWN:
+		isMouseDrag = true;
+		originPt = cv::Point(x, y);
+		break;
+	case cv::EVENT_LBUTTONUP:
+		isMouseDrag = false;
+		break;
+	case cv::EVENT_MOUSEMOVE:
+		if (isMouseDrag) {
+			// for any drag direction
+			dx = std::min(x, originPt.x);
+			dy = std::min(y, originPt.y);
+			dw = std::abs(x - originPt.x);
+			dh = std::abs(y - originPt.y);
+			drawRect = cv::Rect(dx, dy, dw, dh);
+		}
+		break;
+	}
+}
+
 void streamWindowsDesktop()
 {
 	// make process DPI awareness, refer to head of this file for desc
@@ -73,6 +102,7 @@ void streamWindowsDesktop()
 	// NOTE: careful opencv highgui default is DPI unaware,  
 	// set opencv window without flag WINDOW_AUTOSIZE, let image fit the window and resize it
 	cv::namedWindow("desktop", cv::WINDOW_NORMAL);
+	cv::setMouseCallback("desktop", onMouseEventHandler, NULL);
 	
 	printf("press any key to leave\n");
 	while (true) {
@@ -81,6 +111,15 @@ void streamWindowsDesktop()
 			cv::setWindowProperty("desktop", 
 				cv::WindowPropertyFlags::WND_PROP_AUTOSIZE, 
 				cv::WindowFlags::WINDOW_NORMAL);
+			if (drawRect.area() > 0) {
+				cv::rectangle(desktop, drawRect, cv::Scalar(0, 255, 0));
+				sprintf_s(drawText, "x,y:(%d,%d);w,h:(%d,%d)", 
+					drawRect.x, drawRect.y, drawRect.width, drawRect.height);
+				cv::putText(desktop, drawText, 
+					cv::Point(drawRect.x, drawRect.y - 8), // upper than rectangle
+					cv::FONT_HERSHEY_SIMPLEX, 0.5f, 
+					cv::Scalar(0, 255, 0));
+			}
 			cv::imshow("desktop", desktop);
 
 			auto key = cv::waitKey(10);
