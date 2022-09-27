@@ -1,6 +1,7 @@
 #include "win32_interact.h"
 
-// about the DPI awareness, refer to 
+//   this test function is Windows desktop GUI highly relevant, 
+//   about the DPI awareness, refer to 
 //   https://learn.microsoft.com/en-us/windows/win32/hidpi/high-dpi-desktop-application-development-on-windows
 //   https://learn.microsoft.com/en-us/windows/win32/api/shellscalingapi/
 
@@ -22,7 +23,8 @@ bool hwnd2mat(HWND hwnd, cv::Mat& src)
 	RECT windowsize;    // get the height and width of the screen
 	GetClientRect(hwnd, &windowsize);
 
-	//TODO: checkout shellscalingapi.h
+	// NOTE: also can adjust resolution with DPI scaling for dedvice context
+	//       which applied system or per-monitor DPI 
 	srcheight = windowsize.bottom;// * 1.25f;
 	srcwidth = windowsize.right;// * 1.25f;
 	height = windowsize.bottom / 1;  //change this to whatever size you want to resize to
@@ -61,6 +63,12 @@ bool hwnd2mat(HWND hwnd, cv::Mat& src)
 
 void streamWindowsDesktop()
 {
+	// make process DPI awareness, refer to head of this file for desc
+	// for Vista or older version, same as system aware
+	//SetProcessDPIAware();
+	// for Win10 1607 or later version, also checkout per monitor DPI
+	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_SYSTEM_AWARE);
+
 	cv::Mat desktop;
 	// NOTE: careful opencv highgui default is DPI unaware,  
 	// set opencv window without flag WINDOW_AUTOSIZE, let image fit the window and resize it
