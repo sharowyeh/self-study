@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.2.32630.192
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wpf-test", "wpf-test\wpf-test.csproj", "{E7C36D45-80DD-4030-A338-41D965FCFB7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wpf-uap", "wpf-uap\wpf-uap.csproj", "{32B81306-6F7F-494F-978D-1E594AB762EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wpf-uap", "wpf-uap\wpf-uap.csproj", "{32B81306-6F7F-494F-978D-1E594AB762EA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "grpc-app", "grpc-app\grpc-app.csproj", "{BE613970-2E27-4535-BC6A-462129518D1C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "grpc-srvc", "grpc-srvc\grpc-srvc.csproj", "{65A479E9-7502-4368-A107-48A60936152D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vision-console", "vision-console\vision-console.csproj", "{57C12DA7-1044-465E-962E-1929F0CAD52E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,18 @@ Global
 		{32B81306-6F7F-494F-978D-1E594AB762EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32B81306-6F7F-494F-978D-1E594AB762EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32B81306-6F7F-494F-978D-1E594AB762EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE613970-2E27-4535-BC6A-462129518D1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE613970-2E27-4535-BC6A-462129518D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE613970-2E27-4535-BC6A-462129518D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE613970-2E27-4535-BC6A-462129518D1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65A479E9-7502-4368-A107-48A60936152D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65A479E9-7502-4368-A107-48A60936152D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65A479E9-7502-4368-A107-48A60936152D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65A479E9-7502-4368-A107-48A60936152D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57C12DA7-1044-465E-962E-1929F0CAD52E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57C12DA7-1044-465E-962E-1929F0CAD52E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57C12DA7-1044-465E-962E-1929F0CAD52E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57C12DA7-1044-465E-962E-1929F0CAD52E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
