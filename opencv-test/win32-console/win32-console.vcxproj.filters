@@ -30,6 +30,9 @@
     <ClCompile Include="win32_interact.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="facial_landmarks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imread_debug.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="win32_interact.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="facial_landmarks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
