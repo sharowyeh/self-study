@@ -11,6 +11,14 @@
 // prevent using namespace cv here or header files, which will get
 //   ACCESS_MASK is ambiguous between windows.h and cv::AccessFlag 
 
+#include "facial_landmarks.h"
+// for facial landmarks function using dlib
+#include <dlib/image_processing/frontal_face_detector.h>
+#include <dlib/image_processing/shape_predictor.h>
+#include <dlib/image_processing.h>
+#include <dlib/opencv.h>
+#pragma comment(lib, "dlib19.24.99_debug_64bit_msvc1933.lib")
+
 #include "imread_debug.h"
 #include "vignetting_correction.h"
 #include "win32_interact.h"
@@ -26,7 +34,9 @@ int main()
 
 	//streamWindowsDesktop();
 
-	findCuteIsabellaInGameScreen();
+	//findCuteIsabellaInGameScreen();
+
+	facial_landmarks();
 
 	return 0;
 }
