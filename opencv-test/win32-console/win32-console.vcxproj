@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\opencv-4.5.0\build-2022-x64\install\include;C:\Users\sharow\projects\live2d\dlib;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\opencv-4.5.0\build-2022-x64\install\lib;C:\Users\sharow\projects\live2d\dlib\build\dlib\Debug;C:\Users\sharow\projects\live2d\dlib\build\dlib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\opencv\build\install\include;C:\Users\sharow\projects\live2d\dlib;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\opencv\build\install\x64\vc17\lib;C:\Users\sharow\projects\live2d\dlib\build\dlib\Debug;C:\Users\sharow\projects\live2d\dlib\build\dlib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

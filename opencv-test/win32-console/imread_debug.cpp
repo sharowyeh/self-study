@@ -6,7 +6,12 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
-#pragma comment(lib, "opencv_world450d.lib")
+// re-built opencv 4.6.0 with vs2022
+#pragma comment(lib, "opencv_core460d.lib")
+#pragma comment(lib, "opencv_imgcodecs460d.lib")
+#pragma comment(lib, "opencv_imgproc460d.lib")
+#pragma comment(lib, "opencv_highgui460d.lib")
+//#pragma comment(lib, "opencv_world450d.lib")
 
 using namespace cv;
 

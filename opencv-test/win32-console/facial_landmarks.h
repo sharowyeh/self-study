@@ -26,4 +26,6 @@
 #define CMAKE_INTDIR "Debug"
 #endif
 
-int facial_landmarks();
+int facial_landmarks_dlib();
+
+int facial_landmarks_opencv();

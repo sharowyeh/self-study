@@ -11,12 +11,16 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/face.hpp>
+
+// re-built opencv 4.6.0 with vs2022
+#pragma comment(lib, "opencv_face460d.lib")
 
 using namespace std;
 using namespace dlib;
 using namespace cv;
 
-int facial_landmarks() {
+int facial_landmarks_dlib() {
     // Load the Dlib's face detector and the shape predictor
     frontal_face_detector face_detector = get_frontal_face_detector();
     shape_predictor shape_predictor;
@@ -84,6 +88,37 @@ int facial_landmarks() {
 
     } while (cap.isOpened() && cap.read(img));
     
+    waitKey(0);
+
+    return 0;
+}
+
+int facial_landmarks_opencv() {
+    // following code was generated from chatgpt...
+    Mat image = imread("image.png");
+    
+    // load pre-trained facial landmark detector
+    // lbfmodel.yaml is here? https://github.com/kurnianggoro/GSOC2017/tree/master/data
+    Ptr<face::Facemark> facemark = face::FacemarkLBF::create();
+    facemark->loadModel("lbfmodel.yaml");
+
+    // face regions from classifier
+    // classification is here? C:\opencv\build\install\etc\haarcascades
+    std::vector<Rect> faces;
+    CascadeClassifier faceDetector("haarcascade_frontalface_default.xml");
+    faceDetector.detectMultiScale(image, faces);
+
+    // detect the facial landmarks
+    std::vector<std::vector<Point2f>> landmarks;
+    facemark->fit(image, faces, landmarks);
+
+    // draw the facial landmarks on the image
+    Mat draw;
+    cvtColor(image, draw, COLOR_BGR2RGB);
+    face::drawFacemarks(draw, landmarks[0], Scalar(0, 0, 255));
+
+    // display
+    imshow("face landmarks", draw);
     waitKey(0);
 
     return 0;
