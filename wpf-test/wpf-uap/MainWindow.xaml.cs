@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using Windows.Devices.Enumeration;
+using Windows.Devices.Bluetooth;
 
 namespace wpf_uap
 {
@@ -26,6 +27,8 @@ namespace wpf_uap
         private ObservableCollection<DeviceInformationDisplay> resultCollection =
             new ObservableCollection<DeviceInformationDisplay>();
 
+        private BluetoothLEDevice bluetoothLeDevice;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -35,6 +38,43 @@ namespace wpf_uap
             resultsListView.ItemsSource = resultCollection;
             selectorComboBox.ItemsSource = DeviceSelectorChoices.DevicePickerSelectors;
             selectorComboBox.SelectedIndex = 0;
+            connectDeviceButton.Click += ConnectDeviceButton_Click;
+            resultsListView.SelectionChanged += ResultsListView_SelectionChanged;
+        }
+
+        private void ResultsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var item = resultsListView.SelectedItem as DeviceInformationDisplay;
+            if (item == null)
+                return;
+            selectedDeviceTextBlock.Text = $"{item.Name}[{item.Id}] ";
+            selectedDeviceTextBlock.Tag = item.Id;
+        }
+
+        private async void ConnectDeviceButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (bluetoothLeDevice != null)
+            {
+                bluetoothLeDevice.Dispose();
+                bluetoothLeDevice = null;
+            }
+
+            if (selectedDeviceTextBlock.Tag == null)
+            {
+                Console.WriteLine("nothing selected");
+                return;
+            }
+
+            bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync(selectedDeviceTextBlock.Tag as string);
+            if (bluetoothLeDevice == null)
+            {
+                Console.WriteLine("connect failed");
+                return;
+            }
+
+            MessageBox.Show($"{bluetoothLeDevice.Name} to pair");
+            var result = await bluetoothLeDevice.DeviceInformation.Pairing.PairAsync();
+            MessageBox.Show($"{result.ProtectionLevelUsed.ToString()}");
         }
 
         private void StartWatcherButton_Click(object sender, RoutedEventArgs e)
