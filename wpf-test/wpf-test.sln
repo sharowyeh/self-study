@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wpf-test", "wpf-test\wpf-test.csproj", "{E7C36D45-80DD-4030-A338-41D965FCFB7F}"
 EndProject
@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "grpc-app", "grpc-app\grpc-a
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "grpc-srvc", "grpc-srvc\grpc-srvc.csproj", "{65A479E9-7502-4368-A107-48A60936152D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vision-console", "vision-console\vision-console.csproj", "{57C12DA7-1044-465E-962E-1929F0CAD52E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vision-console", "vision-console\vision-console.csproj", "{57C12DA7-1044-465E-962E-1929F0CAD52E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-images-renderer-winform", "test-images-renderer-winform\test-images-renderer-winform.csproj", "{F373B4B5-DF09-473F-8C7E-B666C193D6C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{57C12DA7-1044-465E-962E-1929F0CAD52E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57C12DA7-1044-465E-962E-1929F0CAD52E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57C12DA7-1044-465E-962E-1929F0CAD52E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F373B4B5-DF09-473F-8C7E-B666C193D6C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F373B4B5-DF09-473F-8C7E-B666C193D6C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F373B4B5-DF09-473F-8C7E-B666C193D6C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F373B4B5-DF09-473F-8C7E-B666C193D6C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
