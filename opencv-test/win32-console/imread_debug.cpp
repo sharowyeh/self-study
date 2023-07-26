@@ -24,6 +24,7 @@ void read_goddess_lenna()
 	if (!image.data)
 	{
 		std::cout << "cannot read\n";
+		return;
 	}
 
 	Mat ciexyz;
@@ -36,6 +37,40 @@ void read_goddess_lenna()
 	std::cout << data[0] << " " << data[1] << " " << data[2] << "\n";
 	std::cout << data2[0] << " " << data2[1] << " " << data2[2] << "\n";
 	imshow("lenna", ciexyz);
+
+	waitKey(0);
+}
+
+void read_raw10_file()
+{
+	// can't use imread to read raw10bit
+	int width = 4096;
+	int height = 3072;
+	short* buff = new short[(size_t)width * height];
+	FILE* f = nullptr;
+	if (fopen_s(&f, "../raw10.raw", "rb") || !f) {
+		std::cout << "cannot read\n";
+		return;
+	}
+	fread(buff, sizeof(buff[0]), width * height, f);
+	fclose(f);
+	Mat image(height, width, CV_16SC1, buff);
+	if (!image.data)
+	{
+		std::cout << "cannot read\n";
+		return;
+	}
+	Mat raw8;
+	// downscale from 10bit to a byte
+	convertScaleAbs(image, raw8, 0.25);
+	imshow("raw8", raw8);
+
+	Mat bgr;
+	cvtColor(raw8, bgr, COLOR_BayerRGGB2BGR);
+	std::cout << bgr.cols << "x" << bgr.rows << "\n";
+	Mat show = bgr;
+	resize(show, show, Size(show.cols / 8, show.rows / 8));
+	imshow("show", show);
 
 	waitKey(0);
 }

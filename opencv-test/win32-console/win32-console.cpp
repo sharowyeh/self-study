@@ -44,9 +44,9 @@ int main()
 
 	//findCuteIsabellaInGameScreen();
 
-	facial_landmarks_dlib();
+	//facial_landmarks_dlib();
 
-
+	read_raw10_file();
 
 	return 0;
 }
