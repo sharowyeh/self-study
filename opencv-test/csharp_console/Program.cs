@@ -27,9 +27,18 @@ IntPtr renderer;
 var code = SDL.SDL_CreateWindowAndRenderer(
     300, 200, SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE, out window, out renderer);
 
+// ensure the working directory, properties -> debug -> launch profile
 IntPtr surface = SDL_image.IMG_Load("../Lenna_test_image.png");
+if (surface == IntPtr.Zero)
+{
+    Console.WriteLine("image load failed!");
+}
 
 IntPtr texture = SDL.SDL_CreateTextureFromSurface(renderer, surface);
+if (texture == IntPtr.Zero)
+{
+    Console.WriteLine("texture create failed");
+}
 
 SDL.SDL_FreeSurface(surface);
 
