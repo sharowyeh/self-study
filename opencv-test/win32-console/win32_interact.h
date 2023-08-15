@@ -10,3 +10,15 @@ bool hwnd2mat(HWND hwnd, cv::Mat& src);
 
 // try to retrieve frame from Windows desktop screen
 void streamWindowsDesktop();
+
+// headers for getcwd
+#include <string>
+#include <stdio.h> // FILENAME_MAX
+#if _WIN32
+#include <direct.h>
+#define getcwd _getcwd
+#else
+#include <unistd.h>
+#endif
+// get current working directory
+std::string workingDirectory();

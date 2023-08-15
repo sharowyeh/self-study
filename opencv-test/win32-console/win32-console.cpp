@@ -35,6 +35,8 @@
 int main()
 {
     std::cout << "Hello World!\n";
+	// always forget check working directory for opencv reading image via relative path
+	std::cout << "working dir: " << workingDirectory() << std::endl;
 
 	//read_goddess_lenna();
 

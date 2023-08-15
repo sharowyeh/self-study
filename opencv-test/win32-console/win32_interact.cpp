@@ -128,3 +128,12 @@ void streamWindowsDesktop()
 		}
 	}
 }
+
+std::string workingDirectory()
+{
+	char tmp[FILENAME_MAX] = { 0 };
+	if (!getcwd(tmp, sizeof(tmp))) {
+		return std::string();
+	}
+	return std::string(tmp);
+}

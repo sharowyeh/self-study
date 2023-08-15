@@ -41,7 +41,7 @@ int facial_landmarks_dlib() {
     VideoCapture cap;
     // Load the input image
     //Mat img = imread("..\\x64\\Debug\\robot-anime-girl.png");
-    Mat img = imread("Lenna_test_image.png");
+    Mat img = imread("../Lenna_test_image.png");
     if (img.empty()) {
         std::cout << "Image not found, using camera retrieve frame" << std::endl;
         if (cap.isOpened() == false)
