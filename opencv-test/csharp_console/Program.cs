@@ -24,8 +24,12 @@ SDL.SDL_Init(SDL.SDL_INIT_VIDEO);
 
 IntPtr window;
 IntPtr renderer;
-var code = SDL.SDL_CreateWindowAndRenderer(
+var err = SDL.SDL_CreateWindowAndRenderer(
     300, 200, SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE, out window, out renderer);
+if (err != 0)
+{
+    Console.WriteLine($"create window failed, err:{SDL.SDL_GetError()}");
+}
 
 // ensure the working directory, properties -> debug -> launch profile
 IntPtr surface = SDL_image.IMG_Load("../Lenna_test_image.png");
@@ -39,6 +43,19 @@ if (texture == IntPtr.Zero)
 {
     Console.WriteLine("texture create failed");
 }
+
+// get texture original size
+uint format;
+int access;
+int width;
+int height;
+err = SDL.SDL_QueryTexture(texture, out format, out access, out width, out height);
+if (err != 0)
+{
+    Console.Write($"query texture failed, err={SDL.SDL_GetError()}");
+}
+
+SDL.SDL_SetWindowSize(window, width, height);
 
 SDL.SDL_FreeSurface(surface);
 
