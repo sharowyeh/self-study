@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1267
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIThreadInvokeExample_WinForm", "UIThreadInvokeExample_WinForm\UIThreadInvokeExample_WinForm.csproj", "{82E51D82-C499-4F55-8263-7D97D4DADAFE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIThreadInvokeExample_WPF", "UIThreadInvokeExample_WPF\UIThreadInvokeExample_WPF.csproj", "{1444BF11-7750-447B-AE7B-448D99DB4D6E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mutex-test-linux", "mutex-test-linux\mutex-test-linux.vcxproj", "{D19A96D7-412A-4D97-AE31-D2BAC63095CC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "atomic_test", "atomic_test\atomic_test.vcxproj", "{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,26 +84,31 @@ Global
 		{D19A96D7-412A-4D97-AE31-D2BAC63095CC}.Release|x64.Build.0 = Release|x64
 		{D19A96D7-412A-4D97-AE31-D2BAC63095CC}.Release|x86.ActiveCfg = Release|x86
 		{D19A96D7-412A-4D97-AE31-D2BAC63095CC}.Release|x86.Build.0 = Release|x86
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Debug|Any CPU.Build.0 = Debug|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Debug|ARM.ActiveCfg = Debug|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Debug|ARM.Build.0 = Debug|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Debug|ARM64.ActiveCfg = Debug|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Debug|ARM64.Build.0 = Debug|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Debug|x64.ActiveCfg = Debug|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Debug|x64.Build.0 = Debug|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Debug|x86.ActiveCfg = Debug|Win32
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Debug|x86.Build.0 = Debug|Win32
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Release|Any CPU.ActiveCfg = Release|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Release|Any CPU.Build.0 = Release|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Release|ARM.ActiveCfg = Release|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Release|ARM.Build.0 = Release|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Release|ARM64.ActiveCfg = Release|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Release|ARM64.Build.0 = Release|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Release|x64.ActiveCfg = Release|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Release|x64.Build.0 = Release|x64
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Release|x86.ActiveCfg = Release|Win32
+		{BF457D22-CB61-4A25-A4E5-9198AE82BDFD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EA826D1E-4763-47FA-A47B-BEA9342524AC}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://sharowyeh.visualstudio.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = UIThreadInvokeExample_WinForm\\UIThreadInvokeExample_WinForm.csproj
-		SccProjectName1 = UIThreadInvokeExample_WinForm
-		SccLocalPath1 = UIThreadInvokeExample_WinForm
-		SccProjectUniqueName2 = UIThreadInvokeExample_WPF\\UIThreadInvokeExample_WPF.csproj
-		SccProjectName2 = UIThreadInvokeExample_WPF
-		SccLocalPath2 = UIThreadInvokeExample_WPF
-		SccProjectUniqueName3 = mutex-test-linux\\mutex-test-linux.vcxproj
-		SccProjectName3 = mutex-test-linux
-		SccLocalPath3 = mutex-test-linux
 	EndGlobalSection
 EndGlobal
