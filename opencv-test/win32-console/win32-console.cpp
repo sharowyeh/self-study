@@ -32,6 +32,8 @@
 #include "win32_interact.h"
 #include "match_template.h"
 
+#include "cvplot_debug.h"
+
 int main()
 {
     std::cout << "Hello World!\n";
@@ -48,7 +50,10 @@ int main()
 
 	//facial_landmarks_dlib();
 
-	read_raw10_file();
+	//read_raw10_file();
+
+	show_line_plot();
+	show_circle_plot();
 
 	return 0;
 }

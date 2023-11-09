@@ -50,5 +50,8 @@
     <ClInclude Include="facial_landmarks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="cvplot_debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

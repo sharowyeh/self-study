@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\opencv\build\install\include;C:\Users\sharow\projects\live2d\dlib;$(IncludePath)</IncludePath>
+    <IncludePath>C:\opencv\build\install\include;C:\Users\sharow\projects\live2d\dlib;C:\Users\sharow\source\sharowyeh\self-study\opencv-test\cv-plot\CvPlot\inc;$(IncludePath)</IncludePath>
     <LibraryPath>C:\opencv\build\install\x64\vc17\lib;C:\Users\sharow\projects\live2d\dlib\build\dlib\Debug;C:\Users\sharow\projects\live2d\dlib\build\dlib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -140,6 +140,7 @@
     <ClCompile Include="win32-console.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cvplot_debug.h" />
     <ClInclude Include="facial_landmarks.h" />
     <ClInclude Include="imread_debug.h" />
     <ClInclude Include="match_template.h" />
