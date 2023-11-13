@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\opencv\build\install\include;C:\Users\sharow\projects\live2d\dlib;C:\Users\sharow\source\sharowyeh\self-study\opencv-test\cv-plot\CvPlot\inc;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\opencv\build\install\x64\vc17\lib;C:\Users\sharow\projects\live2d\dlib\build\dlib\Debug;C:\Users\sharow\projects\live2d\dlib\build\dlib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\opencv\build\install\include;C:\Users\sharow\projects\live2d\dlib;C:\Users\sharow\source\sharowyeh\self-study\opencv-test\cv-plot\CvPlot\inc;C:\Users\sharow\projects\vcpkg\installed\x64-windows\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\opencv\build\install\x64\vc17\lib;C:\Users\sharow\projects\live2d\dlib\build\dlib\Debug;C:\Users\sharow\projects\live2d\dlib\build\dlib\Release;C:\Users\sharow\projects\vcpkg\installed\x64-windows\debug\lib;C:\Users\sharow\projects\vcpkg\installed\x64-windows\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -109,6 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
