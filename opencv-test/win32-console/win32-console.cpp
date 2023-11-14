@@ -34,12 +34,6 @@
 
 #include "cvplot_debug.h"
 
-// a wrapper for gnuplot cli, so required Gnuplot 5.2.6+ and c++17
-#include <cmath>
-#include <matplot/matplot.h>
-#pragma comment(lib, "matplot.lib")
-#pragma comment(lib, "nodesoup.lib")
-
 int main()
 {
     std::cout << "Hello World!\n";
@@ -60,15 +54,7 @@ int main()
 
 	//show_line_plot();
 	//show_circle_plot();
-
-	auto[X, Y] = matplot::meshgrid(matplot::iota(1, 0.5, 10), matplot::iota(1, 20));
-	auto Z =
-		matplot::transform(X, Y, [](double x, double y) { return sin(x) + cos(y); });
-	auto C = matplot::transform(X, Y, [](double x, double y) { return x * y; });
-	matplot::surf(X, Y, Z, C);
-	matplot::colorbar();
-	matplot::save("test.png");
-	matplot::show();
+	show_plane_colormap();
 
 	return 0;
 }

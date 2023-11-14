@@ -8,13 +8,32 @@
 // only use header files without compiling its source code
 #define CVPLOT_HEADER_ONLY
 #include <CvPlot/cvplot.h>
+#include <CvPlot/core/Axes.h>
+#include <CvPlot/drawables/LineBase.h>
+#include <CvPlot/drawables/Series.h>
+#include <CvPlot/drawables/PlaneBase.h>
 #include <vector>
 #include <math.h>
 
+//DEBUG: try to design 2d colormap, due to cv-plot strict linebase to drawing plot, change while drawing mechanism
+void show_plane_colormap() {
+	std::vector<double> v{.24f, .36f, .22f, .03f, .83f, .55f, .37f, .79f, .93f}; // try the 3x3
+	// for linspec, use `p` represent plane chart
+	auto axes = CvPlot::plot(v, "pk");
+	cv::Mat mat = axes.render(600, 800);
+	cv::imshow("colormap", mat);
+	cv::waitKey();
+}
+
 void show_line_plot() {
 	std::vector<double> v{1.f, 2.f, 3.f, 1.f, 5.f, 2.f};
-	auto axes = CvPlot::plot(v, "-o");
-	cv::Mat mat = axes.render(300, 400);
+	// for linspec, refer to LineBase.ipp:
+	//  `-` means solid type connecting all markers,
+	//  `o` means circle marker type, exntend x/+ for cross/plus symbol
+	//  color code only support b/g/r/c/y/m/k/w 8 types
+	auto axes = CvPlot::plot(v, "+k");
+	//auto axes = CvPlot::plot(v, "-om");
+	cv::Mat mat = axes.render(600, 800);
 	cv::imshow("lineplot", mat);
 	cv::waitKey();
 }
