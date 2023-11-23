@@ -11,7 +11,6 @@
 #include <CvPlot/core/Axes.h>
 #include <CvPlot/drawables/LineBase.h>
 #include <CvPlot/drawables/Series.h>
-#include <CvPlot/drawables/PlaneBase.h>
 #include <vector>
 #include <math.h>
 
@@ -45,14 +44,16 @@ void show_plane_colormap() {
 
 void show_line_plot() {
 	std::vector<double> v{1.f, 2.f, 3.f, 1.f, 5.f, 2.f};
+	std::vector<double> vx{3.f, 1.f, 2.f, 6.f, 3.f, 4.f};
 	// for linspec, refer to LineBase.ipp:
 	//  `-` means solid type connecting all markers,
 	//  `o` means circle marker type, exntend x/+ for cross/plus symbol
 	//  color code only support b/g/r/c/y/m/k/w 8 types
 	auto axes = CvPlot::plot(v, "+k");
-	axes.xLabel("x");
+	axes.xLabel("x axis");
+	axes.yLabel("y axis");
+	axes.create<CvPlot::Series>(vx, "xr");
 	// default axes margin x:80,30 y:40,45
-	//auto axes = CvPlot::plot(v, "-om");
 	cv::Mat mat = axes.render(600, 800);
 	cv::imshow("lineplot", mat);
 	cv::waitKey();
@@ -74,7 +75,7 @@ void show_circle_plot() {
 	axes.create<CvPlot::Series>(xAxis, yAxis, "-g");
 	axes.create<CvPlot::Series>(xAxis, "-b");
 	auto ret = axes.find<CvPlot::Series>();
-	cv::Mat mat = axes.render(300, 400);
+	cv::Mat mat = axes.render(300, 600);
 	cv::imshow("circleplot", mat);
 	cv::waitKey();
 }
