@@ -15,20 +15,30 @@
 #include <vector>
 #include <math.h>
 
+#include <random>
+
 //DEBUG: try to design 2d colormap, due to cv-plot strict linebase to drawing plot, change while drawing mechanism
 void show_plane_colormap() {
-	// try 8x6 size to draw color map
-	std::vector<double> v;
-	cv::Mat m(60, 80, CV_64FC1);
-	for (int i = 0; i < 60 * 80; i++) {
-		v.push_back(((i * 2) - 4800.f) / 4800.f);
-		m.at<double>(i / 80, i % 80) = ((i * 2) - 4800.f) / 4800.f;
+	// for random value generate
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<double> dist(-1.0, 1.0);
+
+	// try custom size to draw color map
+	std::vector<double> v; // use mat instead of vector or need given cols/rows for it
+	int rows = 7;
+	int cols = 13;
+	cv::Mat m(rows, cols, CV_64FC1);
+	for (int i = 0; i < rows * cols; i++) {
+		v.push_back((double)((i * 2) - rows * cols) / rows * cols);
+		//m.at<double>(i / cols, i % cols) = (double)((i * 2) - rows * cols) / rows * cols;
+		m.at<double>(i / cols, i % cols) = dist(gen);
 	}
 	// for linspec, use `p` represent plane chart
 	auto axes = CvPlot::plane(m, "pk", "debug");
-	axes.setMargins(40, 20, 20, 40);
 	auto found = axes.find<CvPlot::Series>("debug");
-	cv::Mat mat = axes.render(600, 600);
+	// width default margin, left margin must be greater than 40 for color bar
+	cv::Mat mat = axes.render(rows * 40 + 45 + 40, cols * 40 + 80 + 30);;
 	cv::imshow("colormap", mat);
 	cv::waitKey();
 }
