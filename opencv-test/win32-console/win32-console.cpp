@@ -51,10 +51,12 @@ int main()
 	//facial_landmarks_dlib();
 
 	//read_raw10_file();
+	increase_raw10_file();
+	//create_raw10_shading();
 
 	//show_line_plot();
 	//show_circle_plot();
-	show_plane_colormap();
+	//show_plane_colormap();
 
 	return 0;
 }
