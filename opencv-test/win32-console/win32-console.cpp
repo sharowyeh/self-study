@@ -51,12 +51,24 @@ int main()
 	//facial_landmarks_dlib();
 
 	//read_raw10_file();
-	increase_raw10_file();
+	//increase_raw10_file();
 	//create_raw10_shading();
 
 	//show_line_plot();
 	//show_circle_plot();
 	//show_plane_colormap();
+
+	cv::FileStorage fsw("config.xml", cv::FileStorage::WRITE | cv::FileStorage::APPEND | cv::FileStorage::FORMAT_XML);
+	fsw << "Hello" << "World";
+	fsw << "foo" << "bar";
+	fsw << "number" << 123;
+	fsw.release(); // must release to flush data to file
+	// NOTE: cv::FileStorage didnt support update specific element, can only rewrite whole file
+	cv::FileStorage fsr;
+	fsr.open("config.xml", cv::FileStorage::READ | cv::FileStorage::FORMAT_XML);
+	auto size = fsr.root().size();
+	std::string hello = (std::string)fsr["Hello"];
+	fsr.release(); // file mode is read, whether done or not
 
 	return 0;
 }
