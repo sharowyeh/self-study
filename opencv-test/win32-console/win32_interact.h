@@ -11,6 +11,9 @@ bool hwnd2mat(HWND hwnd, cv::Mat& src);
 // try to retrieve frame from Windows desktop screen
 void streamWindowsDesktop();
 
+// try to use cv::FileStorage access xml/json files
+void configFile(std::string filePath);
+
 // headers for getcwd
 #include <string>
 #include <stdio.h> // FILENAME_MAX

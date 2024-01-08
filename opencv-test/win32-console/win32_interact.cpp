@@ -129,6 +129,35 @@ void streamWindowsDesktop()
 	}
 }
 
+void configFile(std::string filePath) {
+	// NOTE: this sample is using xml, for json as well
+	// fsw as file writer
+	cv::FileStorage fsw(filePath, cv::FileStorage::WRITE | cv::FileStorage::APPEND | cv::FileStorage::FORMAT_XML);
+	fsw << "Hello" << "World";
+	fsw << "foo" << "bar";
+	fsw << "number" << 123;
+	fsw << "sub";
+	// for the sub element, must come with { and }
+	fsw << "{";
+	fsw << "name" << "john";
+	fsw << "last" << "doe";
+	fsw << "subofsub";
+	fsw << "{";
+	fsw << "num" << 321;
+	fsw << "str" << std::string("from string");
+	fsw << "}";
+	fsw << "}";
+	fsw.release(); // must release to flush data to file
+	// NOTE: cv::FileStorage didnt support update value to specific element, can only rewrite whole file
+
+	// fsr as file reader
+	cv::FileStorage fsr;
+	fsr.open(filePath, cv::FileStorage::READ | cv::FileStorage::FORMAT_XML);
+	auto size = fsr.root().size();
+	std::string hello = (std::string)fsr["Hello"];
+	fsr.release(); // file mode is read, whether done or not
+}
+
 std::string workingDirectory()
 {
 	char tmp[FILENAME_MAX] = { 0 };
