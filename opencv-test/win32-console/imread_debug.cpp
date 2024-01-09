@@ -84,7 +84,7 @@ void increase_raw10_file() {
 	int height = 3072;
 	unsigned short* buff = new unsigned short[(size_t)width * height];
 	FILE* f = nullptr;
-	if (fopen_s(&f, "../iso.raw", "rb") || !f) {
+	if (fopen_s(&f, "../CalibRaw_G156.raw", "rb") || !f) {
 		std::cout << "cannot read\n";
 		return;
 	}
@@ -96,18 +96,20 @@ void increase_raw10_file() {
 		std::cout << "cannot read\n";
 		return;
 	}
+	
+	srand(time(0));
 
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
 			auto pixel = image.at<ushort>(row, col);
-			pixel += 64; // increase 64 to raw10 pixel
+			pixel += 1 + rand() % 8; // increase number to raw10 pixel
 			image.at<ushort>(row, col) = pixel;
 		}
 	}
 
 	// store raw10 via fopen from cv::Mat
 	FILE* fout = nullptr;
-	if (fopen_s(&fout, "../iso_64.raw", "wb") || !fout) {
+	if (fopen_s(&fout, "../CalibRaw_G156_8.raw", "wb") || !fout) {
 		std::cout << "adjust output raw opens failed" << std::endl;
 		return;
 	}
@@ -139,7 +141,7 @@ void create_raw10_shading() {
 	// use generateRngGradient(), refer to normalization_debug()
 	cv::Mat filter = cv::Mat(height, width, CV_64FC1, cv::Scalar(1));
 	generateGradient(filter, 0.3f);
-	generateRngGradient(filter, 1.0f, 1.1f, 0.05f);
+	generateRngGradient(filter, 1.1f, 0.9f, 0.05f);
 	//cv::imshow("filter", filter);
 
 	Size displaySize(width / 4, height / 4);

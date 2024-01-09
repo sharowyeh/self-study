@@ -51,7 +51,7 @@ int main()
 	//facial_landmarks_dlib();
 
 	//read_raw10_file();
-	//increase_raw10_file();
+	increase_raw10_file();
 	//create_raw10_shading();
 
 	//show_line_plot();
@@ -59,7 +59,7 @@ int main()
 	//show_plane_colormap();
 
 	configFile("config.xml");
-
+	
 	return 0;
 }
 
