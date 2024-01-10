@@ -34,6 +34,8 @@
 
 #include "cvplot_debug.h"
 
+#include "try_exception.h"
+
 int main()
 {
     std::cout << "Hello World!\n";
@@ -51,15 +53,17 @@ int main()
 	//facial_landmarks_dlib();
 
 	//read_raw10_file();
-	increase_raw10_file();
+	//increase_raw10_file();
 	//create_raw10_shading();
 
 	//show_line_plot();
 	//show_circle_plot();
 	//show_plane_colormap();
 
-	configFile("config.xml");
+	//configFile("config.xml");
 	
+	access_violation();
+
 	return 0;
 }
 
