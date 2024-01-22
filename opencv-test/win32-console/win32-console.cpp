@@ -36,8 +36,17 @@
 
 #include "try_exception.h"
 
+// macros include playground
+#define STR_IMP(A) #A
+#define STR(A) STR_IMP(A)
+#define PREFIX pre
+#define MIDDLE cur
+#define SURFFIX post
+#define MIXED STR(PREFIX-MIDDLE-SURFFIX)
+
 int main()
 {
+	std::cout << "marcos MIXED: " << MIXED << std::endl;
     std::cout << "Hello World!\n";
 	// always forget check working directory for opencv reading image via relative path
 	std::cout << "working dir: " << workingDirectory() << std::endl;
