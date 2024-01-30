@@ -155,7 +155,123 @@ void configFile(std::string filePath) {
 	fsr.open(filePath, cv::FileStorage::READ | cv::FileStorage::FORMAT_XML);
 	auto size = fsr.root().size();
 	std::string hello = (std::string)fsr["Hello"];
+	std::string foo;
+	int number;
+	fsr["foo"] >> foo;
+	fsr["number"] >> number;
+
+	auto sub = fsr["sub"];
+	std::string name;
+	sub["name"] >> name;
+	
+	auto subofsub = sub["subofsub"]; // node of the next level
+	int num;
+	std::string str;
+	subofsub["num"] >> num;
+	subofsub["str"] >> str;
+
 	fsr.release(); // file mode is read, whether done or not
+}
+
+// or move to this header
+#include <iostream>
+#include <fstream>
+
+struct TestStruct {
+	//std::string this_is_string; // if data struct contains dynamic ptr, all variables should output separately with fixed size
+	unsigned short this_is_ushort;
+	short this_is_short;
+	int this_is_int;
+	double this_is_double;
+	char* this_is_char_array;
+	unsigned char* this_is_uchar_array;
+};
+
+void composeBin(std::string filePath) {
+	// this will face the unsigned char* or std::string that did't have predefined length of array...
+
+	// object initialization
+	TestStruct data{};
+	//data.this_is_string = "for string data";
+	data.this_is_ushort = 123;
+	data.this_is_short = 321;
+	data.this_is_int = 456;
+	data.this_is_double = 789.0;
+	const size_t array_size = 10 * sizeof(char);
+	std::array<char, array_size> dummy{};
+	data.this_is_char_array = dummy.data();
+	data.this_is_char_array[0] = 'a';
+	data.this_is_char_array[1] = 'r';
+	data.this_is_char_array[2] = 'r';
+	data.this_is_char_array[3] = 'a';
+	data.this_is_char_array[4] = 'y';
+	data.this_is_char_array[5] = '\0';
+	std::array<unsigned char, array_size> dummy2{};
+	data.this_is_uchar_array = dummy2.data();
+	data.this_is_uchar_array[0] = 0xff;
+	data.this_is_uchar_array[1] = 0x01;
+	data.this_is_uchar_array[2] = 0xfe;
+	data.this_is_uchar_array[3] = 0x02;
+	data.this_is_uchar_array[4] = 0xfc;
+	data.this_is_uchar_array[5] = 0x03;
+
+	// use fstream for struct read/write
+	std::ofstream outFile(filePath.c_str(), std::ios::binary);
+	if (outFile.is_open()) {
+		// it only dumps primitive data type, ptr will dump address
+		outFile.write(reinterpret_cast<const char*>(&data), sizeof(TestStruct));
+
+		// assign the size of any * data
+		outFile.write(reinterpret_cast<const char*>(&array_size), sizeof(size_t));
+		// assign the array context
+		outFile.write(reinterpret_cast<const char*>(data.this_is_char_array), array_size);
+		// alt uchar array
+		outFile.write(reinterpret_cast<const char*>(&array_size), sizeof(size_t));
+		outFile.write(reinterpret_cast<const char*>(data.this_is_uchar_array), array_size);
+		// flush
+		outFile.close();
+	}
+
+}
+
+void decomposeBin(std::string filePath) {
+
+	TestStruct dataRead{};
+
+	size_t str_sizeRead;
+	size_t array_sizeRead;
+	char* alt_char_array;
+	unsigned char* alt_uchar_array;
+	std::ifstream inFile(filePath.c_str(), std::ios::binary | std::ios::in);
+	if (inFile.is_open()) {
+		// only read primitive data, all ptr type will get meaningless address from write process
+		inFile.read(reinterpret_cast<char*>(&dataRead), sizeof(TestStruct));
+
+		inFile.read(reinterpret_cast<char*>(&array_sizeRead), sizeof(size_t));
+		assert(array_sizeRead > 0);
+		// allocate ptr from read size
+		dataRead.this_is_char_array = (char*)malloc(array_sizeRead);
+		//alt_char_array = (char*)malloc(array_sizeRead);
+		inFile.read(reinterpret_cast<char*>(dataRead.this_is_char_array), array_sizeRead);
+		//memcpy_s(alt_char_array, array_sizeRead, dataRead.this_is_char_array, array_sizeRead);
+
+		inFile.read(reinterpret_cast<char*>(&array_sizeRead), sizeof(size_t));
+		assert(array_sizeRead > 0);
+		dataRead.this_is_uchar_array = (unsigned char*)malloc(array_sizeRead);
+		//alt_uchar_array = (unsigned char*)malloc(array_sizeRead);
+		inFile.read(reinterpret_cast<char*>(dataRead.this_is_uchar_array), array_sizeRead);
+		//memcpy_s(alt_uchar_array, array_sizeRead, dataRead.this_is_uchar_array, array_sizeRead);
+
+		inFile.close();
+		printf_s("%s\n", dataRead.this_is_char_array);
+		//printf_s("%s\n", alt_char_array);
+
+		printf_s("%x %x\n", dataRead.this_is_uchar_array[4], dataRead.this_is_uchar_array[5]);
+		//printf_s("%x %x\n", alt_uchar_array[4], alt_uchar_array[5]);
+
+		//delete alt_char_array;
+		//delete alt_uchar_array;
+	}
 }
 
 std::string workingDirectory()

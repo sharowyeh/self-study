@@ -70,8 +70,10 @@ int main()
 	//show_plane_colormap();
 
 	//configFile("config.xml");
+	//composeBin("config.bin");
+	decomposeBin("config.bin");
 	
-	access_violation();
+	//access_violation();
 
 	return 0;
 }

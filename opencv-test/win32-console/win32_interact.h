@@ -14,6 +14,11 @@ void streamWindowsDesktop();
 // try to use cv::FileStorage access xml/json files
 void configFile(std::string filePath);
 
+// just compose struct to binary...?
+void composeBin(std::string filePath);
+
+void decomposeBin(std::string filePath);
+
 // headers for getcwd
 #include <string>
 #include <stdio.h> // FILENAME_MAX
