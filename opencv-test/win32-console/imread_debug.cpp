@@ -220,3 +220,42 @@ void create_raw10_shading() {
 
 	waitKey(0);
 }
+
+void change_raw10_bayer() {
+	int width = 4096;
+	int height = 3072;
+	unsigned short* buff = new unsigned short[(size_t)width * height];
+	FILE* f = nullptr;
+	if (fopen_s(&f, "../real.raw", "rb") || !f) {
+		std::cout << "cannot read\n";
+		return;
+	}
+	fread(buff, sizeof(buff[0]), width * height, f);
+	fclose(f);
+	Mat image(height, width, CV_16UC1, buff);
+	if (!image.data)
+	{
+		std::cout << "cannot read\n";
+		return;
+	}
+
+	// for raw10 bayer pixel swapping BGGR to GRBG
+	ushort* ptrs = image.ptr<ushort>();
+	for (size_t i = 0; i < height; i += 2) {
+		auto bg_start = i * width;
+		auto gr_start = (i + 1) * width;
+		std::swap_ranges(ptrs + bg_start, ptrs + bg_start + width, ptrs + gr_start);
+	}
+
+	// store raw10 via fopen from cv::Mat
+	FILE* fout = nullptr;
+	if (fopen_s(&fout, "../bayer.raw", "wb") || !fout) {
+		std::cout << "adjust output raw opens failed" << std::endl;
+		return;
+	}
+	// write byte from cv::Mat even is ushort per pixel
+	const uchar* ptr = image.data;
+	size_t size = image.total() * image.elemSize();
+	fwrite(ptr, 1, size, fout);
+	fclose(fout);
+}

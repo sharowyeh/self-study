@@ -64,6 +64,7 @@ int main()
 	//read_raw10_file();
 	//increase_raw10_file();
 	//create_raw10_shading();
+	change_raw10_bayer();
 
 	//show_line_plot();
 	//show_circle_plot();
@@ -71,7 +72,7 @@ int main()
 
 	//configFile("config.xml");
 	//composeBin("config.bin");
-	decomposeBin("config.bin");
+	//decomposeBin("config.bin");
 	
 	//access_violation();
 
