@@ -51,7 +51,7 @@ void read_raw10_file()
 	int height = 3072;
 	unsigned short* buff = new unsigned short[(size_t)width * height];
 	FILE* f = nullptr;
-	if (fopen_s(&f, "../raw10.raw", "rb") || !f) {
+	if (fopen_s(&f, "../iso_real2.raw", "rb") || !f) {
 		std::cout << "cannot read\n";
 		return;
 	}
@@ -74,6 +74,74 @@ void read_raw10_file()
 	std::cout << bgr.cols << "x" << bgr.rows << "\n";
 	Mat show = bgr;
 	resize(show, show, displaySize);
+	imshow("show", show);
+
+	waitKey(0);
+}
+
+void crop_raw10_file() {
+	int new_width = 4000;
+	int new_height = 3000;
+	Mat new_img(new_height, new_width, CV_16UC1);
+
+	int width = 4096;
+	int height = 3072;
+	unsigned short* buff = new unsigned short[(size_t)width * height];
+	FILE* f = nullptr;
+	if (fopen_s(&f, "../iso.raw", "rb") || !f) {
+		std::cout << "cannot read\n";
+		return;
+	}
+	fread(buff, sizeof(buff[0]), width * height, f);
+	fclose(f);
+	Mat image(height, width, CV_16UC1, buff);
+	if (!image.data)
+	{
+		std::cout << "cannot read\n";
+		return;
+	}
+
+	if (new_width > width || new_height > height) {
+		std::cout << "new size can not larger than origin\n";
+		return;
+	}
+	if ((new_width - width) % 2 != 0 || (new_height - height) % 2 != 0) {
+		std::cout << "size not odd, bayer pattern will be incorrect\n";
+		return;
+	}
+
+	int offset_width = (width - new_width) / 2;
+	int offset_height = (height - new_height) / 2;
+
+	for (int row = offset_height; row < offset_height + new_height; row++) {
+		for (int col = offset_width; col < offset_width + new_width; col++) {
+			auto pixel = image.at<ushort>(row, col);
+			new_img.at<ushort>(row - offset_height, col - offset_width) = pixel;
+		}
+	}
+
+	// store raw10 via fopen from cv::Mat
+	FILE* fout = nullptr;
+	if (fopen_s(&fout, "../resize.raw", "wb") || !fout) {
+		std::cout << "adjust output raw opens failed" << std::endl;
+		return;
+	}
+	// write byte from cv::Mat even is ushort per pixel
+	const uchar* ptr = new_img.data;
+	size_t size = new_img.total() * new_img.elemSize();
+	fwrite(ptr, 1, size, fout);
+	fclose(fout);
+
+	// downscale from 10bit to a byte
+	Mat raw8;
+	convertScaleAbs(new_img, raw8, 0.25);
+
+	Size displaySize(new_width / 4, new_height / 4);
+	Mat bgr;
+	cvtColor(raw8, bgr, COLOR_BayerBGGR2BGR);
+	std::cout << bgr.cols << "x" << bgr.rows << "\n";
+	Mat show = bgr;
+	cv::resize(show, show, displaySize);
 	imshow("show", show);
 
 	waitKey(0);

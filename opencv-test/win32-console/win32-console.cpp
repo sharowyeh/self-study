@@ -62,9 +62,10 @@ int main()
 	//facial_landmarks_dlib();
 
 	//read_raw10_file();
+	crop_raw10_file();
 	//increase_raw10_file();
 	//create_raw10_shading();
-	change_raw10_bayer();
+	//change_raw10_bayer();
 
 	//show_line_plot();
 	//show_circle_plot();
