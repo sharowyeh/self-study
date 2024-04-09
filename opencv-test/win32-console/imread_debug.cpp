@@ -152,7 +152,7 @@ void increase_raw10_file() {
 	int height = 3072;
 	unsigned short* buff = new unsigned short[(size_t)width * height];
 	FILE* f = nullptr;
-	if (fopen_s(&f, "../CalibRaw_G156.raw", "rb") || !f) {
+	if (fopen_s(&f, "../shading_real3.raw", "rb") || !f) {
 		std::cout << "cannot read\n";
 		return;
 	}
@@ -170,14 +170,17 @@ void increase_raw10_file() {
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
 			auto pixel = image.at<ushort>(row, col);
-			pixel += 1 + rand() % 8; // increase number to raw10 pixel
+			auto ratio = 0.4053; // increase or decrease by ratio
+			pixel *= ratio;
+			//auto diff = 1 + rand() % 8;
+			//pixel -= diff; // decrease number to raw10 pixel
 			image.at<ushort>(row, col) = pixel;
 		}
 	}
 
 	// store raw10 via fopen from cv::Mat
 	FILE* fout = nullptr;
-	if (fopen_s(&fout, "../CalibRaw_G156_8.raw", "wb") || !fout) {
+	if (fopen_s(&fout, "../iso_real3_veriexpo.raw", "wb") || !fout) {
 		std::cout << "adjust output raw opens failed" << std::endl;
 		return;
 	}

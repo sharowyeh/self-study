@@ -185,6 +185,7 @@ struct TestStruct {
 	double this_is_double;
 	char* this_is_char_array;
 	unsigned char* this_is_uchar_array;
+	const char* this_is_const_char_array;
 };
 
 void composeBin(std::string filePath) {
@@ -214,6 +215,8 @@ void composeBin(std::string filePath) {
 	data.this_is_uchar_array[3] = 0x02;
 	data.this_is_uchar_array[4] = 0xfc;
 	data.this_is_uchar_array[5] = 0x03;
+	auto dummy3 = std::string("string to const char");
+	data.this_is_const_char_array = dummy3.c_str();
 
 	// use fstream for struct read/write
 	std::ofstream outFile(filePath.c_str(), std::ios::binary);
@@ -228,18 +231,17 @@ void composeBin(std::string filePath) {
 		// alt uchar array
 		outFile.write(reinterpret_cast<const char*>(&array_size), sizeof(size_t));
 		outFile.write(reinterpret_cast<const char*>(data.this_is_uchar_array), array_size);
+		// alt const char from string
+		outFile.write(reinterpret_cast<const char*>(data.this_is_const_char_array), dummy3.length() + 1);
 		// flush
 		outFile.close();
 	}
 
 }
 
-void decomposeBin(std::string filePath) {
+// try in sub method return the reading struct
+void subDecomposeBin(std::string filePath, TestStruct& dataRead, size_t& array_sizeRead) {
 
-	TestStruct dataRead{};
-
-	size_t str_sizeRead;
-	size_t array_sizeRead;
 	char* alt_char_array;
 	unsigned char* alt_uchar_array;
 	std::ifstream inFile(filePath.c_str(), std::ios::binary | std::ios::in);
@@ -262,16 +264,50 @@ void decomposeBin(std::string filePath) {
 		inFile.read(reinterpret_cast<char*>(dataRead.this_is_uchar_array), array_sizeRead);
 		//memcpy_s(alt_uchar_array, array_sizeRead, dataRead.this_is_uchar_array, array_sizeRead);
 
-		inFile.close();
-		printf_s("%s\n", dataRead.this_is_char_array);
-		//printf_s("%s\n", alt_char_array);
+		//char* str_array = (char*)malloc(21);
+		dataRead.this_is_const_char_array = (char*)malloc(21);
+		inFile.read((char*)dataRead.this_is_const_char_array, 21);
+		//inFile.read(reinterpret_cast<char*>(str_array), 21);
+		//dataRead.this_is_const_char_array = str_array;
+		//delete str_array;
 
-		printf_s("%x %x\n", dataRead.this_is_uchar_array[4], dataRead.this_is_uchar_array[5]);
+		inFile.close();
+		printf_s("sub: %s\n", dataRead.this_is_char_array);
+		//printf_s("%s\n", alt_char_array);
+		printf_s("sub: ");
+		for (auto i = 0; i < array_sizeRead; i++) {
+			printf_s("%x ", dataRead.this_is_uchar_array[i]);
+		}
+		printf_s("\n");
 		//printf_s("%x %x\n", alt_uchar_array[4], alt_uchar_array[5]);
+
+		printf_s("sub: %s\n", dataRead.this_is_const_char_array);
 
 		//delete alt_char_array;
 		//delete alt_uchar_array;
 	}
+	
+}
+
+void decomposeBin(std::string filePath) {
+
+	TestStruct dataRead{};
+
+	size_t str_sizeRead;
+	size_t array_sizeRead;
+
+	// will go to sub method
+	subDecomposeBin(filePath, dataRead, array_sizeRead);
+	
+	printf_s("%s\n", dataRead.this_is_char_array);
+	//printf_s("%s\n", alt_char_array);
+
+	for (auto i = 0; i < array_sizeRead; i++) {
+		printf_s("%x ", dataRead.this_is_uchar_array[i]);
+	}
+	printf_s("\n");
+
+	printf_s("%s\n", dataRead.this_is_const_char_array);
 }
 
 std::string workingDirectory()
