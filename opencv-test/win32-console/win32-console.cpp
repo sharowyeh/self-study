@@ -31,6 +31,7 @@
 #include "vignetting_correction.h"
 #include "win32_interact.h"
 #include "match_template.h"
+#include "bayer_shading.h"
 
 #include "cvplot_debug.h"
 
@@ -63,9 +64,11 @@ int main()
 
 	//read_raw10_file();
 	//crop_raw10_file();
-	increase_raw10_file();
+	//increase_raw10_file();
 	//create_raw10_shading();
 	//change_raw10_bayer();
+
+	bayer_shading_test();
 
 	//show_line_plot();
 	//show_circle_plot();

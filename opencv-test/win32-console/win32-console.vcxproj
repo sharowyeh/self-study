@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bayer_shading.cpp" />
     <ClCompile Include="facial_landmarks.cpp" />
     <ClCompile Include="imread_debug.cpp" />
     <ClCompile Include="match_template.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="win32-console.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bayer_shading.h" />
     <ClInclude Include="cvplot_debug.h" />
     <ClInclude Include="facial_landmarks.h" />
     <ClInclude Include="imread_debug.h" />
