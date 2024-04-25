@@ -111,12 +111,12 @@ int show_channels(Mat channels[4]) {
 	return 0;
 }
 
-int imshow_row10(const char* name, Mat raw10) {
+int imshow_raw10(const char* name, Mat raw10, float ratio = 0.25) {
 	int ch_width = raw10.cols;
 	int ch_height = raw10.rows;
-	Size displaySize(ch_width / 4, ch_height / 4);
+	Size displaySize(ch_width * ratio, ch_height * ratio);
 	Mat raw8;
-	convertScaleAbs(raw10, raw8, 0.25);
+	convertScaleAbs(raw10, raw8, 0.25); // 1/4
 	resize(raw8, raw8, displaySize);
 	imshow(name, raw8);
 
@@ -125,21 +125,58 @@ int imshow_row10(const char* name, Mat raw10) {
 	return 0;
 }
 
-int grid_and_mean(Mat& dst, Mat src, int grid_cols, int grid_rows) {
-	int grid_width = src.cols / grid_cols;
-	int grid_height = src.rows / grid_rows;
-
-	for (int c = 0; c < grid_cols; c++) {
-		for (int r = 0; r < grid_rows; r++) {
-			int grid_x = c * grid_width;
-			int grid_y = r * grid_height;
+// stretch grids fitting full resolution
+int grid_and_mean_full(Mat& dst, Mat src, int grid_cols, int grid_rows, std::vector<cv::Rect>& rois, Mat& means) {
+	int calc_width = src.cols / grid_cols;
+	int calc_height = src.rows / grid_rows;
+	// ensure rois covered full resolution, mod number separately in each rois
+	int mod_cols = src.cols % grid_cols;
+	int mod_rows = src.rows % grid_rows;
+	int step_cols = round((float)grid_cols / mod_cols);
+	int step_rows = round((float)grid_rows / mod_rows);
+	int offset_cols = 0, offset_rows = 0;
+	for (int r = 0; r < grid_rows; r++) {
+		// reset offset rows
+		offset_cols = 0;
+		// if this roi needs to contain additional size
+		bool with_more_row = ((r % step_rows == 0 && offset_rows < mod_rows) ||
+							  (grid_rows - r == mod_rows - offset_rows));
+		for (int c = 0; c < grid_cols; c++) {
+			int grid_x = offset_cols + c * calc_width;
+			int grid_y = offset_rows + r * calc_height;
+			// if this roi needs to contain additional size
+			bool with_more_col = ((c % step_cols == 0 && offset_cols < mod_cols) ||
+								  (grid_cols - c == mod_cols - offset_cols)); // because we round the step, must comsumed all mod numbers
+			int grid_width = calc_width + (with_more_col ? 1 : 0);
+			int grid_height = calc_height + (with_more_row ? 1 : 0);
 			Rect rect = Rect(grid_x, grid_y, grid_width, grid_height);
+			rois.push_back(rect);
 			Mat roi(src, rect);
-			Scalar val = cv::mean(roi);
+			/*if (r == grid_rows - 1 && c == grid_cols - 1) {
+				imshow("last", roi);
+			}*/
+			Scalar val = cv::mean(roi); // 16UC1
+			// subtract black level, raw10 is 64
+			if (val[0] <= 64) {
+				std::cerr << "roi(" << c << "," << r << ") mean val:" << val[0] << " less than black level" << std::endl;
+				val[0] = 0;
+			} else {
+				val[0] -= 64;
+			}
 			cv::rectangle(dst, rect, val, -1);
+			// little endian for raw10
+			means.at<ushort>(r * grid_cols + c) = (ushort)round(val[0]);
+
+			if (with_more_col) {
+				offset_cols++;
+			}
+		}
+		if (with_more_row) {
+			offset_rows++;
 		}
 	}
-
+	assert(offset_cols == mod_cols);
+	assert(offset_rows == mod_rows);
 	return 0;
 }
 
@@ -163,10 +200,29 @@ void bayer_shading_test() {
 	// grid each of channels, 41x31 or 99x75, greater grid numbers reducing interpolation computing efforts
 	int grid_cols = 41;
 	int grid_rows = 31;
+	vector<Rect> rois;
+	//TODO: better using 32F for further calcuation
+	Mat gr_means = Mat::zeros(grid_rows, grid_cols, CV_16UC1);
 	Mat gr_grid;
 	gr.copyTo(gr_grid);
-	grid_and_mean(gr_grid, gr, grid_cols, grid_rows);
+	grid_and_mean_full(gr_grid, gr, grid_cols, grid_rows, rois, gr_means);
 	// show dbg grid image
-	imshow_row10("Gr_GRID", gr_grid);
+	imshow_raw10("Gr_GRID", gr_grid);
+	imshow_raw10("Gr_MEANS", gr_means, 2);
+	
+	// check the center brightness of 41x31, target:20,15
+	ushort gr_target = gr_means.at<ushort>(20 * 31 + 15);
+	// baseline shifted 1024, incase the most brightness is not in center target (the gain mat will looks like raw11)
+	Mat gr_grid_gain = 1024 + gr_target - gr_means;
+	imshow_raw10("Gr_GRID_GAIN", gr_grid_gain / 2, 8);
+	
+	// interpolate resize by opencv from gain table to color channel resolution
+	Mat gr_gain;
+	resize(gr_grid_gain, gr_gain, Size(ch_width, ch_height), 0, 0, INTER_LINEAR); // bilinear interpolation
 
+	// apply gain to the origin
+	Mat gr_apply;
+	gr.copyTo(gr_apply);
+	gr_apply = gr_apply + gr_gain - 1024;
+	imshow_raw10("Gr_APPLY", gr_apply);
 }
