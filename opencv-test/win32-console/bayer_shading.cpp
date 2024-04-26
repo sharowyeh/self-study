@@ -126,7 +126,9 @@ int imshow_raw10(const char* name, Mat raw10, float ratio = 0.25) {
 }
 
 // stretch grids fitting full resolution
-int grid_and_mean_full(Mat& dst, Mat src, int grid_cols, int grid_rows, std::vector<cv::Rect>& rois, Mat& means) {
+int grid_and_mean_full(Mat src, int grid_cols, int grid_rows, std::vector<cv::Rect>& rois, Mat& means, std::string prefix = "", Mat* dst_opt = nullptr) {
+	Mat dst;
+	src.copyTo(dst);
 	int calc_width = src.cols / grid_cols;
 	int calc_height = src.rows / grid_rows;
 	// ensure rois covered full resolution, mod number separately in each rois
@@ -177,6 +179,47 @@ int grid_and_mean_full(Mat& dst, Mat src, int grid_cols, int grid_rows, std::vec
 	}
 	assert(offset_cols == mod_cols);
 	assert(offset_rows == mod_rows);
+
+	// show debug image
+	imshow_raw10(string(prefix + "_GRID").c_str(), dst);
+	imshow_raw10(string(prefix + "_MEANSx2").c_str(), means, 2);
+
+	if (dst_opt) {
+		dst.copyTo(*dst_opt);
+	}
+
+	//waitKey(0);
+
+	return 0;
+}
+
+int  gain_and_apply(Mat src, int grid_cols, int grid_rows, Mat means, std::string prefix = "", Mat* dst_opt = nullptr) {
+	int ch_width = src.cols;
+	int ch_height = src.rows;
+	// check the center brightness of 41x31, target:20,15
+	int target_col = grid_cols / 2 + 1;
+	int target_row = grid_rows / 2 + 1;
+	ushort target = means.at<ushort>(target_col * grid_rows + target_row);
+	// baseline shifted 1024, incase the most brightness is not in center target (the gain mat will looks like raw11)
+	Mat grid_gain = 1024 + target - means;
+	imshow_raw10(string(prefix + "_GRID_GAINx8").c_str(), grid_gain / 2, 8);
+
+	// interpolate resize by opencv from gain table to color channel resolution
+	Mat gain;
+	resize(grid_gain, gain, Size(ch_width, ch_height), 0, 0, INTER_LINEAR); // bilinear interpolation
+
+	// apply gain to the origin
+	Mat apply;
+	src.copyTo(apply);
+	apply = apply + gain - 1024;
+	imshow_raw10(string(prefix + "_APPLY").c_str(), apply);
+
+	if (dst_opt) {
+		apply.copyTo(*dst_opt);
+	}
+
+	//waitKey(0);
+
 	return 0;
 }
 
@@ -197,32 +240,25 @@ void bayer_shading_test() {
 	// show debug channels
 	show_channels(channels);
 
+	std::string pattern[4] = { "Gr", "R", "B", "Gb" };
+
 	// grid each of channels, 41x31 or 99x75, greater grid numbers reducing interpolation computing efforts
 	int grid_cols = 41;
 	int grid_rows = 31;
 	vector<Rect> rois;
 	//TODO: better using 32F for further calcuation
 	Mat gr_means = Mat::zeros(grid_rows, grid_cols, CV_16UC1);
-	Mat gr_grid;
-	gr.copyTo(gr_grid);
-	grid_and_mean_full(gr_grid, gr, grid_cols, grid_rows, rois, gr_means);
-	// show dbg grid image
-	imshow_raw10("Gr_GRID", gr_grid);
-	imshow_raw10("Gr_MEANS", gr_means, 2);
+	Mat r_means = Mat::zeros(grid_rows, grid_cols, CV_16UC1);
+	Mat b_means = Mat::zeros(grid_rows, grid_cols, CV_16UC1);
+	Mat gb_means = Mat::zeros(grid_rows, grid_cols, CV_16UC1);
+	Mat means[4] = { gr_means, r_means, b_means, gb_means };
+	for (int i = 0; i < 4; i++) {
+		grid_and_mean_full(channels[i], grid_cols, grid_rows, rois, means[i], pattern[i], nullptr);
+	}
 	
-	// check the center brightness of 41x31, target:20,15
-	ushort gr_target = gr_means.at<ushort>(20 * 31 + 15);
-	// baseline shifted 1024, incase the most brightness is not in center target (the gain mat will looks like raw11)
-	Mat gr_grid_gain = 1024 + gr_target - gr_means;
-	imshow_raw10("Gr_GRID_GAIN", gr_grid_gain / 2, 8);
+	// generate gain and apply to channels mat
+	for (int i = 0; i < 4; i++) {
+		gain_and_apply(channels[i], grid_cols, grid_rows, means[i], pattern[i], nullptr);
+	}
 	
-	// interpolate resize by opencv from gain table to color channel resolution
-	Mat gr_gain;
-	resize(gr_grid_gain, gr_gain, Size(ch_width, ch_height), 0, 0, INTER_LINEAR); // bilinear interpolation
-
-	// apply gain to the origin
-	Mat gr_apply;
-	gr.copyTo(gr_apply);
-	gr_apply = gr_apply + gr_gain - 1024;
-	imshow_raw10("Gr_APPLY", gr_apply);
 }
