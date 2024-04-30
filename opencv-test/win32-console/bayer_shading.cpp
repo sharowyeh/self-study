@@ -41,6 +41,7 @@ int extract_bayer_channels(int width, int height, std::string file, cv::Mat chan
 	convertScaleAbs(image, raw8, 0.25);
 	//imshow("raw8", raw8);
 
+	// remosaicing bayer to rgb
 	Size displaySize(width / 4, height / 4);
 	Mat bgr;
 	cvtColor(raw8, bgr, COLOR_BayerGRBG2BGR);
@@ -84,34 +85,7 @@ int extract_bayer_channels(int width, int height, std::string file, cv::Mat chan
 	return 0;
 }
 
-int show_channels(Mat channels[4]) {
-	int ch_width = channels[0].cols;
-	int ch_height = channels[0].rows;
-
-	Size displaySize(ch_width / 4, ch_height / 4);
-	Mat raw8;
-	convertScaleAbs(channels[0], raw8, 0.25);
-	resize(raw8, raw8, displaySize);
-	imshow("Gr", raw8);
-
-	convertScaleAbs(channels[1], raw8, 0.25);
-	resize(raw8, raw8, displaySize);
-	imshow("R", raw8);
-
-	convertScaleAbs(channels[2], raw8, 0.25);
-	resize(raw8, raw8, displaySize);
-	imshow("B", raw8);
-
-	convertScaleAbs(channels[3], raw8, 0.25);
-	resize(raw8, raw8, displaySize);
-	imshow("Gb", raw8);
-
-	waitKey(0);
-
-	return 0;
-}
-
-int imshow_raw10(const char* name, Mat raw10, float ratio = 0.25) {
+int imshow_raw10(const char* name, Mat raw10, float ratio = 0.25, bool wait = false) {
 	int ch_width = raw10.cols;
 	int ch_height = raw10.rows;
 	Size displaySize(ch_width * ratio, ch_height * ratio);
@@ -119,6 +93,20 @@ int imshow_raw10(const char* name, Mat raw10, float ratio = 0.25) {
 	convertScaleAbs(raw10, raw8, 0.25); // 1/4
 	resize(raw8, raw8, displaySize);
 	imshow(name, raw8);
+
+	if (wait) {
+		waitKey(0);
+	}
+
+	return 0;
+}
+
+int show_channels(Mat channels[4]) {
+
+	imshow_raw10("Gr", channels[0]);
+	imshow_raw10("R", channels[1]);
+	imshow_raw10("B", channels[2]);
+	imshow_raw10("Gb", channels[3]);;
 
 	waitKey(0);
 
@@ -182,13 +170,13 @@ int grid_and_mean_full(Mat src, int grid_cols, int grid_rows, std::vector<cv::Re
 
 	// show debug image
 	imshow_raw10(string(prefix + "_GRID").c_str(), dst);
-	imshow_raw10(string(prefix + "_MEANSx2").c_str(), means, 2);
+	imshow_raw10(string(prefix + "_MEANS").c_str(), means, 1);
 
 	if (dst_opt) {
 		dst.copyTo(*dst_opt);
 	}
 
-	//waitKey(0);
+	waitKey(0);
 
 	return 0;
 }
@@ -202,11 +190,12 @@ int  gain_and_apply(Mat src, int grid_cols, int grid_rows, Mat means, std::strin
 	ushort target = means.at<ushort>(target_col * grid_rows + target_row);
 	// baseline shifted 1024, incase the most brightness is not in center target (the gain mat will looks like raw11)
 	Mat grid_gain = 1024 + target - means;
-	imshow_raw10(string(prefix + "_GRID_GAINx8").c_str(), grid_gain / 2, 8);
+	imshow_raw10(string(prefix + "_GRID_GAIN").c_str(), grid_gain / 2, 1);
 
 	// interpolate resize by opencv from gain table to color channel resolution
 	Mat gain;
 	resize(grid_gain, gain, Size(ch_width, ch_height), 0, 0, INTER_LINEAR); // bilinear interpolation
+	imshow_raw10(string(prefix + "_GAIN").c_str(), gain / 2);
 
 	// apply gain to the origin
 	Mat apply;
@@ -218,7 +207,7 @@ int  gain_and_apply(Mat src, int grid_cols, int grid_rows, Mat means, std::strin
 		apply.copyTo(*dst_opt);
 	}
 
-	//waitKey(0);
+	waitKey(0);
 
 	return 0;
 }
