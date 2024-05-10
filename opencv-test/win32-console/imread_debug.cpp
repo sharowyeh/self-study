@@ -16,6 +16,19 @@
 // for create raw10 shading file
 #include "vignetting_correction.h"
 
+// for cross-platform, win32 needs crt secure function
+static inline FILE* fopen_(const char* fn, const char* mod) {
+#ifdef _WIN32
+	FILE* f = nullptr;
+	auto ret = fopen_s(&f, fn, mod);
+	if (ret != 0)
+		return nullptr;
+	return f;
+#else
+	return fopen(fn, mod);
+#endif
+}
+
 using namespace cv;
 
 void read_goddess_lenna()
@@ -31,7 +44,7 @@ void read_goddess_lenna()
 	}
 
 	Mat ciexyz;
-	cvtColor(image, ciexyz, COLOR_BGR2XYZ);
+	cvtColor(image, ciexyz, cv::COLOR_BGR2XYZ);
 	std::cout << ciexyz.channels() << "\n";
 	namedWindow("lenna", WindowFlags::WINDOW_AUTOSIZE);
 	rectangle(ciexyz, Rect(20, 20, 10, 10), Scalar(0.3, 0.3, 0.3));
@@ -51,7 +64,9 @@ void read_raw10_file()
 	int height = 3072;
 	unsigned short* buff = new unsigned short[(size_t)width * height];
 	FILE* f = nullptr;
-	if (fopen_s(&f, "../iso_real2.raw", "rb") || !f) {
+	std::string path = "../iso_real2.raw";
+	f = fopen_(path.c_str(), "rb");
+	if (!f) {
 		std::cout << "cannot read\n";
 		return;
 	}
@@ -70,7 +85,7 @@ void read_raw10_file()
 
 	Size displaySize(width / 4, height / 4);
 	Mat bgr;
-	cvtColor(raw8, bgr, COLOR_BayerRGGB2BGR);
+	cvtColor(raw8, bgr, cv::COLOR_BayerRGGB2BGR);
 	std::cout << bgr.cols << "x" << bgr.rows << "\n";
 	Mat show = bgr;
 	resize(show, show, displaySize);
@@ -88,7 +103,9 @@ void crop_raw10_file() {
 	int height = 3072;
 	unsigned short* buff = new unsigned short[(size_t)width * height];
 	FILE* f = nullptr;
-	if (fopen_s(&f, "../iso.raw", "rb") || !f) {
+	std::string path = "../iso.raw";
+	f = fopen_(path.c_str(), "rb");
+	if (!f) {
 		std::cout << "cannot read\n";
 		return;
 	}
@@ -138,7 +155,7 @@ void crop_raw10_file() {
 
 	Size displaySize(new_width / 4, new_height / 4);
 	Mat bgr;
-	cvtColor(raw8, bgr, COLOR_BayerBGGR2BGR);
+	cvtColor(raw8, bgr, cv::COLOR_BayerBGGR2BGR);
 	std::cout << bgr.cols << "x" << bgr.rows << "\n";
 	Mat show = bgr;
 	cv::resize(show, show, displaySize);

@@ -19,6 +19,8 @@
 // prevent using namespace cv here or header files, which will get
 //   ACCESS_MASK is ambiguous between windows.h and cv::AccessFlag 
 
+// live2d dlib function was built from pure legacy visual studio environment
+#ifdef _WIN32
 #include "facial_landmarks.h"
 // for facial landmarks function using dlib
 #include <dlib/image_processing/frontal_face_detector.h>
@@ -26,6 +28,7 @@
 #include <dlib/image_processing.h>
 #include <dlib/opencv.h>
 #pragma comment(lib, "dlib19.24.99_debug_64bit_msvc1933.lib")
+#endif
 
 #include "imread_debug.h"
 #include "vignetting_correction.h"
@@ -33,7 +36,10 @@
 #include "match_template.h"
 #include "bayer_shading.h"
 
+// cvplot only works with cmake in win32 env
+#ifdef _WIN32
 #include "cvplot_debug.h"
+#endif
 
 #include "try_exception.h"
 
@@ -50,7 +56,7 @@ int main()
 	std::cout << "marcos MIXED: " << MIXED << std::endl;
     std::cout << "Hello World!\n";
 	// always forget check working directory for opencv reading image via relative path
-	std::cout << "working dir: " << workingDirectory() << std::endl;
+	//std::cout << "working dir: " << workingDirectory() << std::endl;
 
 	//read_goddess_lenna();
 

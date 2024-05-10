@@ -27,6 +27,8 @@ void decomposeBin(std::string filePath);
 #define getcwd _getcwd
 #else
 #include <unistd.h>
+#define sprintf_s sprintf
+#define printf_s printf
 #endif
 // get current working directory
 std::string workingDirectory();

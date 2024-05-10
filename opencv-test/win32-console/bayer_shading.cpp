@@ -15,6 +15,19 @@
 #pragma comment(lib, "opencv_imgproc460d.lib")
 #pragma comment(lib, "opencv_highgui460d.lib")
 
+// for cross-platform, win32 needs crt secure function
+static inline FILE* fopen_(const char* fn, const char* mod) {
+#ifdef _WIN32
+	FILE* f = nullptr;
+	auto ret = fopen_s(&f, fn, mod);
+	if (ret != 0)
+		return nullptr;
+	return f;
+#else
+	return fopen(fn, mod);
+#endif
+}
+
 using namespace cv;
 using namespace std;
 
@@ -24,7 +37,8 @@ int extract_bayer_channels(int width, int height, std::string file, cv::Mat chan
 	//int height = 3072;
 	unsigned short* buff = new unsigned short[(size_t)width * height];
 	FILE* f = nullptr;
-	if (fopen_s(&f, file.c_str(), "rb") || !f) {
+	f = fopen_(file.c_str(), "rb");
+	if (!f) {
 		std::cout << "cannot read\n";
 		return -1;
 	}
@@ -44,7 +58,7 @@ int extract_bayer_channels(int width, int height, std::string file, cv::Mat chan
 	// remosaicing bayer to rgb
 	Size displaySize(width / 4, height / 4);
 	Mat bgr;
-	cvtColor(raw8, bgr, COLOR_BayerGRBG2BGR);
+	cvtColor(raw8, bgr, COLOR_BayerGB2BGR);
 	std::cout << bgr.cols << "x" << bgr.rows << "\n";
 	Mat show = bgr;
 	resize(show, show, displaySize);
@@ -194,7 +208,14 @@ int  gain_and_apply(Mat src, int grid_cols, int grid_rows, Mat means, std::strin
 
 	// interpolate resize by opencv from gain table to color channel resolution
 	Mat gain;
-	resize(grid_gain, gain, Size(ch_width, ch_height), 0, 0, INTER_LINEAR); // bilinear interpolation
+	// NOTE: with opencv default bilinear interpolation, aware the edges of result mat
+	Mat temp;
+	int edge_width = ch_width / grid_cols / 2;
+	int edge_height = ch_height / grid_rows / 2;
+	resize(grid_gain, temp, Size(ch_width, ch_height), 0, 0, INTER_LINEAR);
+	// crop edges without applied interpolation
+	temp = temp(Rect(edge_width, edge_height, ch_width - edge_width * 2, ch_height - edge_height * 2));
+	resize(temp, gain, Size(ch_width, ch_height), 0, 0, INTER_LINEAR); // bilinear interpolation
 	imshow_raw10(string(prefix + "_GAIN").c_str(), gain / 2);
 
 	// apply gain to the origin
