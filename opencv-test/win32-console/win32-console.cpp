@@ -51,8 +51,30 @@
 #define SURFFIX post
 #define MIXED STR(PREFIX-MIDDLE-SURFFIX)
 
+#include <tuple>
+void tuple_sample() {
+	std::vector<std::tuple<std::string, unsigned short, double>> values;
+	values.push_back(std::make_tuple("a", 0xb, 3.4));
+	values.push_back(std::make_tuple("c", 0xd, 6.8));
+	for (auto& v : values) {
+		std::string v1;
+		unsigned short v2;
+		double v3;
+		std::tie(v1, v2, v3) = v;
+		printf("tuple: %s, %d, %f\n", v1.c_str(), v2, v3);
+		// try to update
+		std::get<0>(v) += std::to_string(1);
+		std::get<1>(v) += 1;
+		std::get<2>(v) += 1;
+		std::tie(v1, v2, v3) = v;
+		printf("tuple: %s, %d, %f\n", v1.c_str(), v2, v3);
+	}
+}
+
 int main()
 {
+	tuple_sample();
+
 	std::cout << "marcos MIXED: " << MIXED << std::endl;
     std::cout << "Hello World!\n";
 	// always forget check working directory for opencv reading image via relative path
