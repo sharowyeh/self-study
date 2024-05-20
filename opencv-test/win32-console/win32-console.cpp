@@ -69,6 +69,13 @@ void tuple_sample() {
 		std::tie(v1, v2, v3) = v;
 		printf("tuple: %s, %d, %f\n", v1.c_str(), v2, v3);
 	}
+	printf("==sep==\n");
+	for (auto it = values.begin(); it != values.end(); it++) {
+		auto v1 = std::get<0>(*it);
+		auto v2 = std::get<1>(*it);
+		auto v3 = std::get<2>(*it);
+		printf("tuple: %s, %d, %f\n", v1.c_str(), v2, v3);
+	}
 }
 
 int main()
