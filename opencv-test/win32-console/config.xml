@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<Hello>World</Hello>
+<foo>bar</foo>
+<number>123</number>
+<sub>
+  <name>john</name>
+  <last>doe</last>
+  <subofsub>
+    <num>321</num>
+    <str>"from string"</str></subofsub></sub>
+</opencv_storage>

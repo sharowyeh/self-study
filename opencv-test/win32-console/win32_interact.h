@@ -23,6 +23,7 @@ void decomposeBin(std::string filePath);
 #include <string>
 #include <stdio.h> // FILENAME_MAX
 #if _WIN32
+#define printf printf_s
 #include <direct.h>
 #define getcwd _getcwd
 #else
@@ -32,3 +33,12 @@ void decomposeBin(std::string filePath);
 #endif
 // get current working directory
 std::string workingDirectory();
+
+// for stl reading large ini file
+bool loadIniFile(std::string iniPath, std::unordered_map<std::string, std::unordered_map<std::string, std::string>>& iniDataset);
+bool getIniDataDecimal(std::unordered_map<std::string, std::unordered_map<std::string, std::string>> iniDataset,
+	std::string section, std::string key, int64& retVal);
+bool getIniDataDouble(std::unordered_map<std::string, std::unordered_map<std::string, std::string>> iniDataset,
+	std::string section, std::string key, double& retVal);
+bool getIniDatasetString(std::unordered_map<std::string, std::unordered_map<std::string, std::string>> iniDataset,
+	std::string section, std::string key, std::string& retVal);

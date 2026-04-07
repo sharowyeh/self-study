@@ -318,3 +318,139 @@ std::string workingDirectory()
 	}
 	return std::string(tmp);
 }
+
+
+#pragma region stl read large ini file
+
+// helper function to trim string with given tokens
+std::string trim(const std::string& str, const char* tokens) {
+	if (!tokens) {
+		tokens = " \t\r\n";
+	}
+	size_t start = str.find_first_not_of(tokens);
+	if (start == std::string::npos) {
+		return std::string();
+	}
+	size_t end = str.find_last_not_of(tokens);
+	return str.substr(start, end - start + 1);
+}
+// overload
+std::string trim(const std::string& str) { return trim(str, " \t\r\n"); }
+
+std::unordered_map<std::string, std::unordered_map<std::string, std::string>> iniDataset;
+
+bool loadIniFile(std::string iniPath, std::unordered_map<std::string, std::unordered_map<std::string, std::string>>& iniDataset) {
+	std::ifstream file(iniPath);
+	if (!file.is_open()) {
+		printf("cannot open %s\n", iniPath.c_str());
+		return false;
+	}
+
+	iniDataset.clear();
+
+	std::string line;
+	std::string section;
+	std::unordered_map<std::string, std::string> secMap;
+	std::string key;
+	std::string val;
+	while (std::getline(file, line)) {
+		line = trim(line);
+		if (line.empty() || line[0] == ';' || line[0] == '#') {
+			continue;
+		}
+		if (line[0] == '[' && line.back() == ']') {
+			section = line.substr(1, line.size() - 2);
+			section = trim(section);
+		}
+		else {
+			size_t pos = line.find('=');
+			if (pos != std::string::npos) {
+				key = trim(line.substr(0, pos));
+				val = trim(line.substr(pos + 1));
+				iniDataset[section][key] = val;
+			}
+		}
+	}
+	printf("read %s ended\n", iniPath.c_str());
+	printf("dataset count: %ul\n", iniDataset.size());
+	return true;
+}
+
+bool getIniDataDecimal(std::unordered_map<std::string, std::unordered_map<std::string, std::string>> iniDataset,
+	std::string section, std::string key, int64& retVal) {
+	if (iniDataset.empty()) {
+		return false;
+	}
+	auto secIt = iniDataset.find(section);
+	if (secIt == iniDataset.end()) {
+		return false;
+	}
+	auto keyIt = secIt->second.find(key);
+	if (keyIt == secIt->second.end()) {
+		return false;
+	}
+	auto val = keyIt->second;
+	try {
+		size_t idx;
+		int64 decVal;
+		if (val.size() > 2 && val[0] == '0' && (val[1] == 'x' || val[1] == 'X')) {
+			decVal = std::stoll(val, &idx, 16);
+		}
+		else {
+			decVal = std::stoll(val, &idx, 10);
+		}
+		return decVal;
+	}
+	catch (std::exception& e) {
+		printf("str to dec failed, sec:%s key:%s val:%s\n", section.c_str(), key.c_str(), val.c_str());
+		// throw exception or just return false, choose one
+		throw new std::exception(e);
+		return false;
+	}
+}
+
+bool getIniDataDouble(std::unordered_map<std::string, std::unordered_map<std::string, std::string>> iniDataset,
+	std::string section, std::string key, double& retVal) {
+	if (iniDataset.empty()) {
+		return false;
+	}
+	auto secIt = iniDataset.find(section);
+	if (secIt == iniDataset.end()) {
+		return false;
+	}
+	auto keyIt = secIt->second.find(key);
+	if (keyIt == secIt->second.end()) {
+		return false;
+	}
+	auto val = keyIt->second;
+	try {
+		size_t idx;
+		double doubleVal = std::stod(val, &idx);
+		return doubleVal;
+	}
+	catch (std::exception& e) {
+		printf("str to dec failed, sec:%s key:%s val:%s\n", section.c_str(), key.c_str(), val.c_str());
+		// throw exception or just return false, choose one
+		throw new std::exception(e);
+		return false;
+	}
+}
+
+bool getIniDatasetString(std::unordered_map<std::string, std::unordered_map<std::string, std::string>> iniDataset,
+	std::string section, std::string key, std::string& retVal) {
+		if (iniDataset.empty()) {
+			return false;
+		}
+		auto secIt = iniDataset.find(section);
+		if (secIt == iniDataset.end()) {
+			return false;
+		}
+		auto keyIt = secIt->second.find(key);
+		if (keyIt == secIt->second.end()) {
+			return false;
+		}
+		auto val = keyIt->second;
+		retVal = std::string(val);
+}
+
+#pragma endregion
